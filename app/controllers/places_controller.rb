@@ -1,5 +1,5 @@
 class PlacesController < ApplicationController
-  def index
+  def index # returns HTML, need json
     render 'pages/places/index'
   end
 end
