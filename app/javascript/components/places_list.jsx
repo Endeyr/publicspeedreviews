@@ -1,39 +1,43 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom/client'
+import { Link } from 'react-router-dom'
 
-function renderPlacesPage(body) {
+function renderPlacesPage(body, onSearchTextChange) {
 	return (
-		<div class="bg-white p-8 rounded-md w-full">
-			<div class=" flex items-center justify-between pb-6">
+		<div className="bg-white p-8 rounded-md w-full">
+			<div className=" flex items-center justify-between pb-6">
 				<div>
-					<h2 class="text-4xl text-gray-600 font-semibold">Places</h2>
+					<h2 className="text-4xl text-gray-600 font-semibold">Places</h2>
 				</div>
-				<div class="flex items-center justify-between">
-					<div class="flex bg-gray-50 items-center p-2 rounded-md">
+				<div className="flex items-center justify-between">
+					<div className="flex bg-gray-50 items-center p-2 rounded-md">
 						<svg
 							xmlns="http://www.w3.org/2000/svg"
-							class="h-5 w-5 text-gray-400"
+							className="h-5 w-5 text-gray-400"
 							viewBox="0 0 20 20"
 							fill="currentColor"
 						>
 							<path
-								fill-rule="evenodd"
+								fillRule="evenodd"
 								d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-								clip-rule="evenodd"
+								clipRule="evenodd"
 							/>
 						</svg>
 						<input
-							class="bg-gray-50 outline-none ml-1 block "
+							className="bg-gray-50 outline-none ml-1 block "
 							type="text"
 							name=""
 							id=""
 							placeholder="search..."
+							onChange={onSearchTextChange}
 						/>
 					</div>
-					<div class="lg:ml-40 ml-10 space-x-8">
-						<button class="bg-indigo-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">
-							New Log
-						</button>
+					<div className="lg:ml-40 ml-10 space-x-8">
+						<Link to="/new-internet-speed">
+							<button className="bg-indigo-600 px-4 py-2 rounded-md text-white font-semibold tracking-wide cursor-pointer">
+								New Log
+							</button>
+						</Link>
 					</div>
 				</div>
 			</div>
@@ -42,19 +46,25 @@ function renderPlacesPage(body) {
 	)
 }
 
-function PlacesList() {
+export default function PlacesList() {
 	const [loading, setLoading] = useState(true)
 	const [loadedPlaces, setLoadedPlaces] = useState([])
+	const [searchTerm, setSearchTerm] = useState('')
 
 	useEffect(() => {
-		const apiEndpoint = '/api/places'
+		const apiEndpoint = `/api/places?search_term=${searchTerm}`
 		fetch(apiEndpoint)
 			.then((response) => response.json())
 			.then((data) => {
 				setLoadedPlaces(data['places'])
 				setLoading(false)
 			})
-	}, [])
+	}, [searchTerm])
+
+	const onSearchTextChange = (e) => {
+		setLoading(true)
+		setSearchTerm(e.target.value)
+	}
 
 	const loadingSection = <div>Loading...</div>
 	const tableHeaderClass =
@@ -62,40 +72,47 @@ function PlacesList() {
 
 	const dataSection = loadedPlaces.map((place, index) => (
 		<div>
-			<div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-				<div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
-					<table class="min-w-full leading-normal">
-						<tr>
-							<th className={tableHeaderClass}>Name</th>
-							<th className={tableHeaderClass}>City</th>
-							<th className={tableHeaderClass}>Recent Upload Speed</th>
-							<th className={tableHeaderClass}>Recent Upload Speed Units</th>
-							<th className={tableHeaderClass}>Number of Measurements</th>
-						</tr>
-
-						<tr key={index}>
-							<td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-								<p class="text-gray-900 whitespace-no-wrap">{place.name}</p>
-							</td>
-							<td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-								<p class="text-gray-900 whitespace-no-wrap">{place.city}</p>
-							</td>
-							<td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-								<p class="text-gray-900 whitespace-no-wrap">
-									{place.most_recent_download_speed}
-								</p>
-							</td>
-							<td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-								<p class="text-gray-900 whitespace-no-wrap">
-									{place.most_recent_download_units}
-								</p>
-							</td>
-							<td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">
-								<p class="text-gray-900 whitespace-no-wrap">
-									{place.number_of_measurements}
-								</p>
-							</td>
-						</tr>
+			<div className="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
+				<div className="inline-block min-w-full shadow rounded-lg overflow-hidden">
+					<table className="min-w-full leading-normal">
+						<thead>
+							<tr>
+								<th className={tableHeaderClass}>Name</th>
+								<th className={tableHeaderClass}>City</th>
+								<th className={tableHeaderClass}>Recent Upload Speed</th>
+								<th className={tableHeaderClass}>Recent Upload Speed Units</th>
+								<th className={tableHeaderClass}>Number of Measurements</th>
+							</tr>
+						</thead>
+						<tbody>
+							<tr key={index}>
+								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+									<p className="text-gray-900 whitespace-no-wrap">
+										{place.name}
+									</p>
+								</td>
+								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+									<p className="text-gray-900 whitespace-no-wrap">
+										{place.city}
+									</p>
+								</td>
+								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+									<p className="text-gray-900 whitespace-no-wrap">
+										{place.most_recent_download_speed}
+									</p>
+								</td>
+								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+									<p className="text-gray-900 whitespace-no-wrap">
+										{place.most_recent_download_units}
+									</p>
+								</td>
+								<td className="px-5 py-5 border-b border-gray-200 bg-white text-sm">
+									<p className="text-gray-900 whitespace-no-wrap">
+										{place.number_of_measurements}
+									</p>
+								</td>
+							</tr>
+						</tbody>
 					</table>
 				</div>
 			</div>
@@ -103,11 +120,8 @@ function PlacesList() {
 	))
 
 	if (loading) {
-		return renderPlacesPage(loadingSection)
+		return renderPlacesPage(loadingSection, onSearchTextChange)
 	} else {
-		return renderPlacesPage(dataSection)
+		return renderPlacesPage(dataSection, onSearchTextChange)
 	}
 }
-
-const placesList = ReactDOM.createRoot(document.getElementById('page-places'))
-placesList.render(<PlacesList />)
