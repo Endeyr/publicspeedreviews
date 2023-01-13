@@ -1,5 +1,5 @@
 module Api
-  class PlacesController < ApplicationController
+  class PlacesController < BaseController
     def index
       places = get_matching_places(params['search_term']).all.map do |place|
         {
@@ -30,7 +30,7 @@ module Api
       if search_term.blank?
         Place.all
       else
-        Place.where('name LIKE :search_term OR city LIKE :search_term', search_term: "%#{search_term}%")
+        Place.where("name LIKE :search_term OR city LIKE :search_term", search_term: "%#{search_term}%")
       end
     end
   end
