@@ -1,24 +1,10 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+My first attempt at making a rails application with reactJS frontend, followed a guide here: https://youtu.be/L3u0L67m-oc.
+App allows user to log their internet speeds at their current location to track public / private speeds. 
 
-Things you may want to cover:
+* Rails 7 with ReactJS.
 
-* Ruby version
+* PostgreSQL for database.
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* Requires jsbundling gem, esbuild, and react-internet-meter.
